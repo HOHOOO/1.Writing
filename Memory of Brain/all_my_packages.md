@@ -2,8 +2,8 @@ ATOM **_useful_** package & **efficient** keymap
 
 > tools
 
-packages                   | usage             | useful                                   | 快捷键
--------------------------- | ----------------- | ---------------------------------------- | ---
+packages                   | usage             | useful                                   | win_key | mac_key
+-------------------------- | ----------------- | ---------------------------------------- | ------- | -------
 atom- 插入时间戳                |
 dictator                   | 自动翻译              |
 Hydrogen                   |                   |
@@ -18,8 +18,8 @@ Translator Plus Dictionary |                   |                                
 
 > system
 
-packages                | usage    | useful                                                                                                                                | 快捷键
------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------
+packages                | usage    | useful                                                                                                                                | win_key  | mac_key
+----------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------
 Simplified Chinese Menu | 中文汉化     |
 Atom Beautify           | 前无古人后无来者 |                                                                                                                                       | autosave
 Atom Clock              | 表        |                                                                                                                                       |
@@ -27,8 +27,8 @@ Sync Settings           | gist同步设置 | 99d2bf83d07dfc8d5996c623172a8d99b10
 
 > explore
 
-packages           | usage         | useful | 快捷键
------------------- | ------------- | ------ | ---
+packages           | usage         | useful | win_key | mac_key
+------------------ | ------------- | ------ | ------- | -------
 docblocker         | 自动生成一些文档的组成部分 |        |
 Imdone Atom        |               |        |
 Imdone Atom github |               |        |
@@ -37,18 +37,18 @@ hello
 
 > Search keymap
 
-packages           | usage | useful | 快捷键
------------------- | ----- | ------ | ---
+packages           | usage | useful | win_key | mac_key
+------------------ | ----- | ------ | ------- | -------
 查找下一个              |       |        | Cd
 Imdone Atom github |       |        |
 
 > View keymap
 
-packages | usage | useful | 快捷键
--------- | ----- | ------ | ---
+packages | usage | useful | win_key | mac_key
+-------- | ----- | ------ | ------- | -------
 侧边栏      |       |        | C\
 c        |       |        | Cd
 
-Imdone
+打开新窗口 Imdone
 
 hello
