@@ -44,11 +44,19 @@ Imdone Atom github |       |        |
 
 > View keymap
 
-packages | usage | useful | win_key | mac_key
--------- | ----- | ------ | ------- | -------
-侧边栏      |       |        | C\
-c        |       |        | Cd
+packages         | usage | useful | win_key | mac_key
+---------------- | ----- | ------ | ------- | -------
+侧边栏              |       |        | C\
+c                |       |        | Cd
+insert-link      |       |        | SCK
+~~insert-image~~ |       |        | SCI
+_italic_         |       |        | CI
+**blod**         |       |        | CB
+code             |       |        | C'
+blackcode        |       |        | C`
+strikethrough    |       |        | CH
+h1               |       |        | C1
 
 打开新窗口 Imdone
 
-hello
+"shift-ctrl-K": "markdown-writer:insert-link" "shift-ctrl-I": "markdown-writer:insert-image" "ctrl-i": "markdown-writer:toggle-italic-text" "ctrl-b": "markdown-writer:toggle-bold-text" "ctrl-'": "markdown-writer:toggle-code-text" 'ctrl-`': "markdown-writer:toggle-codeblock-text" "ctrl-h": "markdown-writer:toggle-strikethrough-text" "ctrl-1": "markdown-writer:toggle-h1" "ctrl-2": "markdown-writer:toggle-h2" "ctrl-3": "markdown-writer:toggle-h3" "ctrl-4": "markdown-writer:toggle-h4" "ctrl-5": "markdown-writer:toggle-h5"
