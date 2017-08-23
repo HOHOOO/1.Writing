@@ -20,7 +20,16 @@
       "REVIEW"
     ]
   },
-  "lists": [],
+  "lists": [
+    {
+      "name": "PPlabels",
+      "hidden": false
+    },
+    {
+      "name": "PPstory",
+      "hidden": false
+    }
+  ],
   "marked": {
     "gfm": true,
     "tables": true,
@@ -33,5 +42,12 @@
     "id": "599d7d9fe8723b22d092eb9d",
     "name": "Alive",
     "useImdoneioForPriority": true
+  },
+  "meta": {
+    "gh": {
+      "urlTemplate": "https://github.com/HOHOOO/Alive/issues/%s",
+      "titleTemplate": "View github issue %s",
+      "icon": "icon-octoface"
+    }
   }
 }
