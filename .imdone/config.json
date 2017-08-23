@@ -3,7 +3,7 @@
     "^(node_modules|bower_components|\\.imdone|target|build|dist|logs)[\\/\\\\]?|\\.(git|svn|hg|npmignore)|\\~$|\\.(jpg|png|gif|swp|ttf|otf)$"
   ],
   "watcher": true,
-  "keepEmptyPriority": true,
+  "keepEmptyPriority": false,
   "code": {
     "include_lists": [
       "TODO",
@@ -20,20 +20,7 @@
       "REVIEW"
     ]
   },
-  "lists": [
-    {
-      "name": "TODO",
-      "hidden": true
-    },
-    {
-      "name": "DONE",
-      "hidden": true
-    },
-    {
-      "name": "FEATUER",
-      "hidden": false
-    }
-  ],
+  "lists": [],
   "marked": {
     "gfm": true,
     "tables": true,
@@ -41,10 +28,5 @@
     "pedantic": false,
     "smartLists": true,
     "langPrefix": "language-"
-  },
-  "sync": {
-    "id": "5996b8a2e8723b22d092eb8a",
-    "name": "Alive",
-    "useImdoneioForPriority": true
   }
 }
