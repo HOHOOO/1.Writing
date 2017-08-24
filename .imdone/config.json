@@ -3,7 +3,7 @@
     "^(node_modules|bower_components|\\.imdone|target|build|dist|logs)[\\/\\\\]?|\\.(git|svn|hg|npmignore)|\\~$|\\.(jpg|png|gif|swp|ttf|otf)$"
   ],
   "watcher": true,
-  "keepEmptyPriority": true,
+  "keepEmptyPriority": false,
   "code": {
     "include_lists": [
       "TODO",
@@ -20,20 +20,7 @@
       "REVIEW"
     ]
   },
-  "lists": [
-    {
-      "name": "PPlabels",
-      "hidden": false
-    },
-    {
-      "name": "PPstory",
-      "hidden": false
-    },
-    {
-      "name": "TODO",
-      "hidden": false
-    }
-  ],
+  "lists": [],
   "marked": {
     "gfm": true,
     "tables": true,
@@ -41,17 +28,5 @@
     "pedantic": false,
     "smartLists": true,
     "langPrefix": "language-"
-  },
-  "sync": {
-    "id": "599d7d9fe8723b22d092eb9d",
-    "name": "Alive",
-    "useImdoneioForPriority": true
-  },
-  "meta": {
-    "gh": {
-      "urlTemplate": "https://github.com/HOHOOO/Alive/issues/%s",
-      "titleTemplate": "View github issue %s",
-      "icon": "icon-octoface"
-    }
   }
 }
