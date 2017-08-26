@@ -1,59 +1,107 @@
 ATOM **_useful_** package & **efficient** keymap
 
+```
+ #####  ####   ####  #
+   #   #    # #    # #
+   #   #    # #    # #
+   #   #    # #    # #
+   #   #    # #    # #
+   #    ####   ####  ######
+```
+
 > tools
 
-packages                   | usage             | useful                                   | win_key | mac_key
--------------------------- | ----------------- | ---------------------------------------- | ------- | -------
-atom- 插入时间戳                |                   |
-dictator                   | 自动翻译              |
-Hydrogen                   |                   |
-Atom Translator            |                   |
-Github Notifications       |                   |
-atom-translator            | 使用google翻译API     |                                          | CAT
-BrowserPlus                | 网页，主要用来查看notebook |                                          | CAO
-Color Picker               | 快速选颜色             |                                          | CAC
-GitHub Notifications       |                   | 2b930a0d348cd3b00ce8b1716e4d6f6e663acc0e |
-Imdone Atom                |                   | <https://sm.ms/api/upload>               | CSV
-Translator Plus Dictionary |                   |                                          |
-Playyoutube                |                   |
-Markdown Scroll Sync       | auto scroll       |
+packages                   | usage                         | useful | key
+-------------------------- | ----------------------------- | ------ | ---
+Floobits                   | Efficient collaboration       |        |
+Expose                     | 切换窗口                          |        | SCE
+dictator                   | 自动翻译                          |        |
+Atom Zh Dictionary         | 使用有道API翻译 ENGLISH→CHINESE     |        | CAM
+atom-translator            | 使用google翻译API CHINESE→ENGLISH |        | CAT
+BrowserPlus                | 网页，主要用来查看notebook             |        | CAO
+Color Picker               | 快速选颜色                         |        | CAC
+Imdone Atom                |                               |        | CSV
+Markdown Scroll Sync       | auto scroll                   |        |
+figlet                     | 生成ASCII                       |        | CAF
+Hydrogen | | |
+窗口控制|||
+Hey Pane|窗口之间的切换||cSK
+
+
+```
+  ####  #   #  ####  ##### ###### #    #
+ #       # #  #        #   #      ##  ##
+  ####    #    ####    #   #####  # ## #
+      #   #        #   #   #      #    #
+ #    #   #   #    #   #   #      #    #
+  ####    #    ####    #   ###### #    #
+```
 
 > system
 
-packages                 | usage    | useful                                                                                                                                | win_key  | mac_key
------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------
-Simplified Chinese Menu  | 中文汉化     |
-Atom Beautify            | 前无古人后无来者 |                                                                                                                                       | autosave
-Atom Clock               | 表        |                                                                                                                                       |
-Sync Settings            | gist同步设置 | 99d2bf83d07dfc8d5996c623172a8d99b10b7b84/041bea9e0dc4d52be3e83097afbc49f2/automatic update by <http://atom.io/packages/sync-settings> |
-Minimap                  | 缩略图      |                                                                                                                                       |
+packages                 | usage    | useful | win_key
+------------------------ | -------- | ------ | --------
+Simplified Chinese Menu  | 中文汉化     |        |
+file icon                | icon     |        |
+Atom Beautify            | 前无古人后无来者 |        | autosave
+Atom Clock               | 表        |        |
+Sync Settings            | gist同步设置 |        |
+Minimap                  | 缩略图      |        |
 minimap-find-and-replace | 缩略图替换    |
 Minimap Autohide         | 自动隐藏     |
 minimap-linter           | 批注       |
 linter                   |          |
 Intentions               |          |
 
+```
+ ####### #     # ######  #       ####### ######  #######
+ #        #   #  #     # #       #     # #     # #
+ #         # #   #     # #       #     # #     # #
+ #####      #    ######  #       #     # ######  #####
+ #         # #   #       #       #     # #   #   #
+ #        #   #  #       #       #     # #    #  #
+ ####### #     # #       ####### ####### #     # #######
+```
+
 > explore
 
-packages           | usage         | useful | win_key | mac_key
------------------- | ------------- | ------ | ------- | -------
+packages           | usage         | useful | win_key
+------------------ | ------------- | ------ | -------
 docblocker         | 自动生成一些文档的组成部分 |        |
 Imdone Atom        |               |        |
 Imdone Atom github |               |        |
 
 hello
 
+```
+ #    # ###### #   # #    #   ##   #####
+ #   #  #       # #  ##  ##  #  #  #    #
+ ####   #####    #   # ## # #    # #    #
+ #  #   #        #   #    # ###### #####
+ #   #  #        #   #    # #    # #
+ #    # ######   #   #    # #    # #
+```
+
 > Search keymap
 
-packages           | usage | useful | win_key | mac_key
------------------- | ----- | ------ | ------- | -------
+packages           | usage | useful | win_key
+------------------ | ----- | ------ | -------
 查找下一个              |       |        | Cd
 Imdone Atom github |       |        |
 
+```
+ #    # # ###### #    #    #    # ###### #   # #    #   ##   #####
+ #    # # #      #    #    #   #  #       # #  ##  ##  #  #  #    #
+ #    # # #####  #    #    ####   #####    #   # ## # #    # #    #
+ #    # # #      # ## #    #  #   #        #   #    # ###### #####
+  #  #  # #      ##  ##    #   #  #        #   #    # #    # #
+   ##   # ###### #    #    #    # ######   #   #    # #    # #
+```
+
 > View keymap
 
-packages          | usage | useful | win_key | mac_key
------------------ | ----- | ------ | ------- | -------
+packages          | usage | useful | win_key
+----------------- | ----- | ------ | -------
 侧边栏               |       |        | C\
 c                 |       |        | Cd
 insert-link       |       |        | SCK
