@@ -15,7 +15,8 @@ Color Picker               | 快速选颜色             |                      
 GitHub Notifications       |                   | 2b930a0d348cd3b00ce8b1716e4d6f6e663acc0e |
 Imdone Atom                |                   | <https://sm.ms/api/upload>               | CSV
 Translator Plus Dictionary |                   |                                          |
-Playyoutube                |
+Playyoutube                |                   |
+Markdown Scroll Sync       | auto scroll       |
 
 > system
 
@@ -29,6 +30,8 @@ Minimap                  | 缩略图      |                                     
 minimap-find-and-replace | 缩略图替换    |
 Minimap Autohide         | 自动隐藏     |
 minimap-linter           | 批注       |
+linter                   |          |
+Intentions               |          |
 
 > explore
 
@@ -70,4 +73,4 @@ S
 
 ```(?:[\w- ]+)?\r?\nS;
 
-`SS`
+`SS` "ctrl-alt-shift-p": "video-player:play-in-background", "ctrl-alt-shift-s": "video-player:stop", "ctrl-alt-shift-f": "video-player:toggle-back-forth", "ctrl-alt-shift-c": "video-player:toggle-control", "ctrl-alt-shift-n": "video-player:play-in-new-tab", "ctrl-alt-shift-r": "video-player:reload-source", "ctrl-alt-shift-c": "video-player:resume", "ctrl-alt-shift-x": "video-player:pause"
