@@ -1,0 +1,5 @@
+
+SELECT *,
+       datadiff(SNAPSHOT,'$day_time') AS INDEX_FACTOR
+FROM DW_RECSYS_USER_RELATION_DAILY
+WHERE SNAPSHOT >= '$day_time';
