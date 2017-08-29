@@ -1,0 +1,10 @@
+*.pyc
+*.png
+server2.py
+similary_algorithm.py
+off_line_file/
+config/
+test/
+celery_app/
+.idea/
+
