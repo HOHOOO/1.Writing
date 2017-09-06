@@ -108,7 +108,15 @@ hello
 | h1                |       |        | C1      |
 
 S
+cd /Users/houzhiwei/Library/Github/Alive/dm-master/
 
+source activate test_py3
+source deactivate
+ cd /Users/houzhiwei/Library/Github/workstation/
+
+d /Library/Github/Alive/
+
+VIM ~/.bash_profile
 -   [x] S
 
 [{label}]\:{article} 打开新窗口 Imdone

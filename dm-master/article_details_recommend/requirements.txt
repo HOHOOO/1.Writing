@@ -1,9 +1,0 @@
-redis==2.10.5
-pandas==0.18.1
-tornado==4.4.2
-jieba==0.38
-numpy==1.11.1
-Tornado_MySQL==0.5.1
-scipy==0.17.1
-scikit_learn==0.17.1
-tornado_redis==2.4.18

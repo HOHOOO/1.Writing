@@ -22,7 +22,7 @@ class SimilaryModel(object):
     """
 
     def __init__(self, dataframe, features_with_weight, src_article_num=None,
-                 rec_article_num=3, title_fc_extra_weight=None, ndigits=2):
+                 rec_article_num=3, title_fc_extra_weight=None, ndigits=2)
         """
         :param dataframe: 类型为 pandas.DataFrame 类型
         :param features_with_weight: 基于word生成词汇表的特征，类型为 OrderedDict
