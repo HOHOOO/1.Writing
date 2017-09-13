@@ -11,6 +11,6 @@
 | key   | usage                 |
 | ----- | --------------------- |
 |sudo chown -R houzhiwei:staff /data | 远程获取最新版本到本地，不会自动merge |
-|       |                       |
+|     shift_G gg  |                       |
 
 ## 0. 目录{#1}
