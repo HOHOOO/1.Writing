@@ -21,9 +21,9 @@ git fetch
 git checkout origin/master -- path/to/file
 
 create branch
-
+git log
 git show <commit-hashId> 便可以显示某次提交的修改内容
-同样 git show <commit-hashId> filename 可以显示某次提交的某个内容的修改信息。
+git show <commit-hashId> filename 可以显示某次提交的某个内容的修改信息。
 
 Git鼓励大量使用分支：</p>
 查看分支：<code>git branch</code></p>
