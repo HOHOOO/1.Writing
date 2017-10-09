@@ -8,7 +8,7 @@ version=$1
 echo "user_preference_$version"
 
 
-hive -e'set mapred.job.queue.name=q_gmv;
+hive -e "set mapred.job.queue.name=q_gmv;
 set hive.exec.dynamic.partition=true;
 set hive.exec.dynamic.partition.mode=nostrict;
 set hive.groupby.skewindata=true;
@@ -19,15 +19,15 @@ DROP TABLE DW_CP_USER_PREFERENCE_$version_REDIS_TEMP;
 DROP TABLE DW_CP_USER_PREFERENCE_$version_REDIS_temp2;
 DROP TABLE T9_$version;
 
-CREATE TABLE T9_$version AS SELECT user_proxy_key, channel, CONCAT_WS(",", COLLECT_SET(concat(tag_id,":",user_tag_weight))) AS tag_str_draft from ( select user_proxy_key, split(tag_id,"_")[0] as channel, split(tag_id,"_")[1] as tag_id , user_tag_weight FROM recommend.DW_CP_USER_PREFERENCE_$version_LONG_TERM ) t GROUP BY user_proxy_key, channel;
-CREATE TABLE DW_CP_USER_PREFERENCE_$version_REDIS_TEMP AS SELECT user_proxy_key, CONCAT_WS("#", COLLECT_SET(concat(channel,"_",tag_str_draft))) as tag_str from T9_$version GROUP BY user_proxy_key;
-CREATE TABLE DW_CP_USER_PREFERENCE_$version_REDIS_temp2 AS SELECT user_proxy_key ,regexp_extract(tag_str,"cate_(.*?)(#|$)", 1) AS cate,regexp_extract(tag_str,"brand_(.*?)(#|$)", 1) AS brand,regexp_extract(tag_str,"tag_(.*?)(#|$)", 1) AS tag from DW_CP_USER_PREFERENCE_$version_REDIS_TEMP;
-CREATE TABLE DW_CP_USER_PREFERENCE_$version_REDIS AS SELECT user_proxy_key,CASE WHEN cate IS NULL OR cate="" THEN "-1:-1" ELSE cate END as cate,CASE WHEN brand IS NULL OR brand="" THEN "-1:-1" ELSE brand END as brand,CASE WHEN tag IS NULL OR tag="" THEN "-1:-1" ELSE tag END as tag from DW_CP_USER_PREFERENCE_$version_REDIS_temp2;
+CREATE TABLE T9_$version AS SELECT user_proxy_key, channel, CONCAT_WS(',', COLLECT_SET(concat(tag_id,':',user_tag_weight))) AS tag_str_draft from ( select user_proxy_key, split(tag_id,'_')[0] as channel, split(tag_id,'_')[1] as tag_id , user_tag_weight FROM recommend.DW_CP_USER_PREFERENCE_$version_LONG_TERM ) t GROUP BY user_proxy_key, channel;
+CREATE TABLE DW_CP_USER_PREFERENCE_$version_REDIS_TEMP AS SELECT user_proxy_key, CONCAT_WS('#', COLLECT_SET(concat(channel,'_',tag_str_draft))) as tag_str from T9_$version GROUP BY user_proxy_key;
+CREATE TABLE DW_CP_USER_PREFERENCE_$version_REDIS_temp2 AS SELECT user_proxy_key ,regexp_extract(tag_str,'cate_(.*?)(#|$)', 1) AS cate,regexp_extract(tag_str,'brand_(.*?)(#|$)', 1) AS brand,regexp_extract(tag_str,'tag_(.*?)(#|$)', 1) AS tag from DW_CP_USER_PREFERENCE_$version_REDIS_TEMP;
+CREATE TABLE DW_CP_USER_PREFERENCE_$version_REDIS AS SELECT user_proxy_key,CASE WHEN cate IS NULL OR cate=' THEN '-1:-1' ELSE cate END as cate,CASE WHEN brand IS NULL OR brand=' THEN '-1:-1' ELSE brand END as brand,CASE WHEN tag IS NULL OR tag=' THEN '-1:-1' ELSE tag END as tag from DW_CP_USER_PREFERENCE_$version_REDIS_temp2;
 
 DROP TABLE DW_CP_USER_PREFERENCE_$version_REDIS_TEMP;
 DROP TABLE DW_CP_USER_PREFERENCE_$version_REDIS_temp2;
 DROP TABLE T9_$version;
-'
+"
 
 rm -rf $home_path/file/dw_cp_user_preference_test_redis_$day_time.txt
 rm -rf $home_path/file/dw_cp_user_preference_test_redis_$day5_time.txt
