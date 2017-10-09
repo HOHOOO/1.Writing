@@ -5,7 +5,7 @@ month=`date -d "$1 day ago" +"%m"`
 day=`date -d "$1 day ago" +"%d"`
 data=`date -d "$1 day ago" +"%Y%m%d"`
 echo ${data}
-home_path=$1
+home_path=$2
 rm -rf $home_path/nginx/*
 rsync -vrtl --progress --password-file=/home/hadoop/.http.access.log.password readAccessLogUser@10.9.42.154::http-access-log/*/*.http.access.log.${data}_* $home_path/nginx/
 
