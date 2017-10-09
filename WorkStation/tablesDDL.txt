@@ -1,0 +1,562 @@
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_content_tag_relation`(
+  `content_id` string COMMENT '内容ID', 
+  `tag_id` string COMMENT '标签ID', 
+  `content_type_id` string COMMENT '内容类型(300:优惠,500:原创)')
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT DELIMITED 
+  FIELDS TERMINATED BY '\u0001' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_cp_content_tag_relation'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1505196057')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_dic_action_info`(
+  `action_id` string COMMENT '行为ID', 
+  `action_name` string COMMENT '行为名称', 
+  `action_weight_estimate` float COMMENT '认为评估权重', 
+  `action_weight_machine` float COMMENT '机器评估权重')
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT DELIMITED 
+  FIELDS TERMINATED BY '\u0001' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_cp_dic_action_info'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1505194305')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_dic_tag_info`(
+  `tag_id` string COMMENT '标签ID', 
+  `tag_name` string COMMENT '标签名称', 
+  `tag_type_id` string COMMENT '标签类别(300:显式标签,500:隐式标签,700:机器标签)', 
+  `tag_weight_estimate` float COMMENT '人为评估权重', 
+  `tag_weight_machine` float COMMENT '机器评估权重')
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT DELIMITED 
+  FIELDS TERMINATED BY '\u0001' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_cp_dic_tag_info'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1505195740')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_log_user_action`(
+  `action_id` string COMMENT '操作id', 
+  `user_proxy_key` string COMMENT '代理健，用于标识用户的唯一性', 
+  `content_id` string COMMENT '内容id', 
+  `content_type_id` string COMMENT '内容类型id(300:优惠,500:原创)', 
+  `user_action_value` string COMMENT '用户行为数值', 
+  `user_action_time` string COMMENT '用户操作时间')
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_cp_log_user_action'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1505197044')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_tag_statistics_daily`(
+  `tag_id` string COMMENT '标签id', 
+  `user_action_id` string COMMENT '用户操作类型id', 
+  `tag_action_count` float COMMENT '标签访问次数', 
+  `tag_action_uv_count` float COMMENT '去重用户后的标签访问次数', 
+  `tag_type_id` string)
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_cp_tag_statistics_daily'
+TBLPROPERTIES (
+  'last_modified_by'='hadoop', 
+  'last_modified_time'='1506507443', 
+  'transient_lastDdlTime'='1506507443')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_user_preference_30_days`(
+  `user_proxy_key` string, 
+  `tag_id` string, 
+  `user_tag_weight` decimal(7,6))
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/recommend.DW_CP_USER_PREFERENCE_30_DAYS'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1505397349')
+createtab_stmt
+CREATE TABLE `recommend.dw_cp_user_preference_long_term`(
+  `user_proxy_key` string, 
+  `tag_id` string, 
+  `user_tag_weight` decimal(7,6), 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/recommend.DW_CP_USER_PREFERENCE_LONG_TERM'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='false', 
+  'numFiles'='0', 
+  'numRows'='-1', 
+  'rawDataSize'='-1', 
+  'totalSize'='0', 
+  'transient_lastDdlTime'='1506552228')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_user_preference_test_30_days`(
+  `user_proxy_key` string, 
+  `tag_id` string, 
+  `user_tag_weight` decimal(7,6))
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/recommend.DW_CP_USER_PREFERENCE_TEST_30_DAYS'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1506510127')
+createtab_stmt
+CREATE TABLE `recommend.dw_cp_user_preference_test_long_term`(
+  `user_proxy_key` string, 
+  `tag_id` string, 
+  `user_tag_weight` decimal(7,6), 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/recommend.DW_CP_USER_PREFERENCE_TEST_LONG_TERM'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='true', 
+  'numFiles'='0', 
+  'numRows'='165360580', 
+  'rawDataSize'='7799430252', 
+  'totalSize'='0', 
+  'transient_lastDdlTime'='1506517675')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_user_tag_relation_1_days`(
+  `user_proxy_key` string, 
+  `tag_id` string, 
+  `user_tag_weight` float)
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/DW_CP_USER_TAG_RELATION_1_DAYS'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1505206003')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_cp_user_tag_statistics_daily`(
+  `user_proxy_key` string COMMENT '代理健，用于标识用户的唯一性', 
+  `tag_id` string COMMENT '标签id', 
+  `user_tag_action_count` float COMMENT '用户标签访问次数', 
+  `user_tag_value_sum` float COMMENT '用户标签值总和', 
+  `user_action_id` string COMMENT '用户操作类型id', 
+  `tag_type_id` string)
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_cp_user_tag_statistics_daily'
+TBLPROPERTIES (
+  'last_modified_by'='hadoop', 
+  'last_modified_time'='1506492530', 
+  'transient_lastDdlTime'='1506492530')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_recsys_content_tag_relation`(
+  `content_id` string COMMENT '内容ID', 
+  `tag_id` string COMMENT '标签ID', 
+  `content_type_id` string COMMENT '内容类型(300:优惠,500:原创)')
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT DELIMITED 
+  FIELDS TERMINATED BY '\u0001' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_recsys_content_tag_relation'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1504188551')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_recsys_log_user_action`(
+  `action_id` string COMMENT '操作id', 
+  `user_proxy_key` string COMMENT '代理健，用于标识用户的唯一性', 
+  `content_id` string COMMENT '内容id', 
+  `content_type_id` string COMMENT '内容类型id(300:优惠,500:原创)', 
+  `user_action_value` string COMMENT '用户行为数值', 
+  `user_action_time` string COMMENT '用户操作时间')
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_recsys_log_user_action'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1504188973')
+createtab_stmt
+CREATE TABLE `recommend.dw_recsys_t_tag_idf_info`(
+  `tag_id` string, 
+  `idf` double)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/dw_recsys_t_tag_idf_info'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='false', 
+  'numFiles'='200', 
+  'numRows'='-1', 
+  'rawDataSize'='-1', 
+  'totalSize'='226167', 
+  'transient_lastDdlTime'='1504255186')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_recsys_user_tag_relation_1_days`(
+  `user_proxy_key` string COMMENT '代理健，用于标识用户的唯一性', 
+  `tag_id` string COMMENT '标签id', 
+  `user_tag_action_count` float COMMENT '用户标签访问次数，由不同行为生成的标签权重之和', 
+  `user_tag_value_sum` float COMMENT '用户标签值总和', 
+  `user_tag_weight` float COMMENT '用户标签权重')
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_recsys_user_tag_relation_1_days'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1504191097')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_recsys_user_tag_relation_2_days`(
+  `user_proxy_key` string COMMENT '代理健，用于标识用户的唯一性', 
+  `tag_id` string COMMENT '标签id', 
+  `user_tag_action_count` float COMMENT '用户标签访问次数，由不同行为生成的标签权重之和', 
+  `user_tag_value_sum` float COMMENT '用户标签值总和', 
+  `user_tag_weight` float COMMENT '用户标签权重')
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_recsys_user_tag_relation_2_days'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1504235797')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.dw_test`(
+  `user_proxy_key` string COMMENT '代理健，用于标识用户的唯一性', 
+  `tag_id` string COMMENT '标签id', 
+  `user_tag_action_count` float COMMENT '用户标签访问次数', 
+  `user_tag_value_sum` float COMMENT '用户标签值总和', 
+  `user_action_id` string COMMENT '用户操作类型id', 
+  `tag_type_id` string)
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/dw/dw_test'
+TBLPROPERTIES (
+  'last_modified_by'='hadoop', 
+  'last_modified_time'='1506484348', 
+  'transient_lastDdlTime'='1506484348')
+createtab_stmt
+CREATE TABLE `recommend.dw_tmp`(
+  `tag_id` string, 
+  `tag_name` string, 
+  `tag_type_id` string, 
+  `tag_weight_estimate` float, 
+  `tag_weight_machine` float, 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/dw_tmp'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='false', 
+  'numFiles'='10', 
+  'numRows'='-1', 
+  'rawDataSize'='-1', 
+  'totalSize'='12251256', 
+  'transient_lastDdlTime'='1506504058')
+createtab_stmt
+CREATE TABLE `recommend.hoho_search_tmp`(
+  `tag_id_alias` string, 
+  `user_tag_weight` decimal(7,6), 
+  `ds_alias` string, 
+  `tag_id` string, 
+  `tag_name` string, 
+  `tag_type_id` string, 
+  `tag_weight_estimate` float, 
+  `tag_weight_machine` float, 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/hoho_search_tmp'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='true', 
+  'numFiles'='1', 
+  'numRows'='187', 
+  'rawDataSize'='13857', 
+  'totalSize'='14044', 
+  'transient_lastDdlTime'='1505890259')
+createtab_stmt
+CREATE TABLE `recommend.hoho_search_tmp_user`(
+  `tag_id_alias` string, 
+  `user_tag_weight` decimal(7,6), 
+  `ds_alias` string, 
+  `tag_id` string, 
+  `tag_name` string, 
+  `tag_type_id` string, 
+  `tag_weight_estimate` float, 
+  `tag_weight_machine` float, 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/hoho_search_tmp_user'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='true', 
+  'numFiles'='1', 
+  'numRows'='227', 
+  'rawDataSize'='16926', 
+  'totalSize'='17153', 
+  'transient_lastDdlTime'='1505892332')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.recommend_article_history`(
+  `trace_id` string, 
+  `device_id` string, 
+  `user_id` string, 
+  `article_id` string, 
+  `channel_id` string, 
+  `date` string, 
+  `modulename` string, 
+  `submodulename` string, 
+  `source` string, 
+  `r_article_id_or_article_name` string, 
+  `r_channel_id_or_price` string, 
+  `position` string, 
+  `rs_id1` string, 
+  `rs_id2` string, 
+  `rs_id3` string, 
+  `rs_id4` string, 
+  `rs_id5` string, 
+  `reserve1` string, 
+  `reserve2` string, 
+  `reserve3` string)
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT DELIMITED 
+  FIELDS TERMINATED BY '\u0001' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/recommend_article_history'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1489425024')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.recommend_feedback`(
+  `device_id` string, 
+  `user_id` string, 
+  `like_label` string, 
+  `rating_level` string, 
+  `article_id` string, 
+  `article_channel_id` string, 
+  `article_channel_name` string, 
+  `content_url` string, 
+  `rs_id1` string, 
+  `rs_id2` string, 
+  `create_time` timestamp)
+ROW FORMAT DELIMITED 
+  FIELDS TERMINATED BY '\u0001' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/recommend/recommend_feedback'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='false', 
+  'numFiles'='0', 
+  'numRows'='-1', 
+  'rawDataSize'='-1', 
+  'totalSize'='0', 
+  'transient_lastDdlTime'='1482367942')
+createtab_stmt
+CREATE EXTERNAL TABLE `recommend.recsys2_data_report`(
+  `index` int, 
+  `name` string, 
+  `summary` double)
+PARTITIONED BY ( 
+  `ds` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/recsys2_data_report'
+TBLPROPERTIES (
+  'transient_lastDdlTime'='1506393333')
+createtab_stmt
+CREATE TABLE `recommend.test_userprofile`(
+  `user_proxy_key` string, 
+  `tag_name` string, 
+  `user_tag_weight` decimal(7,6))
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/test_userprofile'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='true', 
+  'numFiles'='89', 
+  'numRows'='403565', 
+  'rawDataSize'='14784360', 
+  'totalSize'='15187925', 
+  'transient_lastDdlTime'='1505801359')
+createtab_stmt
+CREATE TABLE `recommend.tmp`(
+  `user_proxy_key` string, 
+  `action_id` string, 
+  `tag_id` string, 
+  `tag_type_id` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/tmp'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='false', 
+  'numFiles'='200', 
+  'numRows'='-1', 
+  'rawDataSize'='-1', 
+  'totalSize'='904366149', 
+  'transient_lastDdlTime'='1506499478')
+createtab_stmt
+CREATE TABLE `recommend.tmp2`(
+  `user_proxy_key` string, 
+  `action_id` string, 
+  `tag_id` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/tmp2'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='false', 
+  'numFiles'='200', 
+  'numRows'='-1', 
+  'rawDataSize'='-1', 
+  'totalSize'='829008553', 
+  'transient_lastDdlTime'='1506500055')
+createtab_stmt
+CREATE TABLE `recommend.tmp3`(
+  `user_proxy_key` string, 
+  `action_id` string, 
+  `tag_id` string, 
+  `tag_type_id` string)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/tmp3'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='false', 
+  'numFiles'='200', 
+  'numRows'='-1', 
+  'rawDataSize'='-1', 
+  'totalSize'='904366149', 
+  'transient_lastDdlTime'='1506500991')
