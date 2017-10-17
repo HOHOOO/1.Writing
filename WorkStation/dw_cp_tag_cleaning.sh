@@ -19,12 +19,12 @@ hive -e '
 drop table tabu_tag_list_mall;
 drop table tabu_tag_list_brand;
 drop table tabu_tag_list_cate;
-drop table dw_cp_dic_tag_info_clean；
-drop table tabu_tag_list；
-drop table dw_cp_content_tag_info；
-drop table tabu_tag_list_sift_1；
-drop table tabu_tag_list_sift_2；
-drop table dw_cp_dic_tag_info_clean_regexp；
+drop table dw_cp_dic_tag_info_clean;
+drop table tabu_tag_list;
+drop table dw_cp_content_tag_info;
+drop table tabu_tag_list_sift_1;
+drop table tabu_tag_list_sift_2;
+drop table dw_cp_dic_tag_info_clean_regexp;
 
 CREATE TABLE IF NOT EXISTS tabu_tag_list_mall as SELECT b.key, b.value
 FROM sync_smzdm_mall a
@@ -33,7 +33,7 @@ LATERAL VIEW explode (map(
 `name_cn_2`, 0,
 `name_en`, 0,
 `name_en_2`, 0
-)) b as key, value where ;
+)) b as key, value;
 
 CREATE TABLE IF NOT EXISTS tabu_tag_list_brand as SELECT b.key, b.value
 FROM sync_smzdm_brand a
@@ -88,7 +88,7 @@ LATERAL VIEW explode (split (key,",")) b AS key;
 
 
 select "tag 213693/231851";
-CREATE TABLE dw_cp_dic_tag_info_clean as SELECT * FROM recommend.dw_cp_dic_tag_info a LEFT OUTER JOIN tabu_tag_list b ON a.tag_name = b.key and a.ds="$one_day_ago" and a.tag_type_id="400" where b.value IS null
+CREATE TABLE dw_cp_dic_tag_info_clean as SELECT * FROM recommend.dw_cp_dic_tag_info a LEFT OUTER JOIN tabu_tag_list b ON a.tag_name = b.key and a.ds="$one_day_ago" and a.tag_type_id="400" where b.value IS null;
 
 select "最近活跃日期为两周内 -85551 dw_cp_tag_statistics_daily_long_term为记录标签最后活跃日期的长期表 日 uv action>2 视为活跃";
 INSERT OVERWRITE TABLE recommend.dw_cp_tag_statistics_daily_long_term
@@ -120,7 +120,7 @@ CREATE TABLE tabu_tag_list_sift_1 as SELECT a.tag_id,a.tag_name,a.tag_weight_est
 
 
 select "-189670";
-CREATE TABLE tabu_tag_list_sift_2 as SELECT a.*,b.content_type_id,b.summary FROM tabu_tag_list_sift_1 a LEFT JOIN dw_cp_content_tag_info b ON a.tag_id = b.tag_id and ((b.content_type_id="300" and b.summary<6) or (b.content_type_id="500" and b.summary<2)) where b.summary IS not null
+CREATE TABLE tabu_tag_list_sift_2 as SELECT a.*,b.content_type_id,b.summary FROM tabu_tag_list_sift_1 a LEFT JOIN dw_cp_content_tag_info b ON a.tag_id = b.tag_id and ((b.content_type_id="300" and b.summary<6) or (b.content_type_id="500" and b.summary<2)) where b.summary IS not null;
 
 
 select "剩余23173";
