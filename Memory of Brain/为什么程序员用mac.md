@@ -31,3 +31,9 @@
 <h4 id='1.1'> 二级目录 </h4>
 
 <h5 id='1.1.1'> 三级目录 </h5>
+
+
+
+
+https://www.dropbox.com/home/DropLib
+cd /Applications && curl http://www.ninjamonkeysoftware.com/slate/versions/slate-latest.tar.gz | tar -xz
