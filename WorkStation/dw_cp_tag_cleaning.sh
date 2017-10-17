@@ -103,7 +103,7 @@ Select b.tag_id,b.user_action_id,b.tag_action_count,b.tag_action_uv_count,b.tag_
       select a.*,rank() over (partition by tag_id order by to_date(ds) desc) as order_rank
       from (select * from dw_cp_tag_statistics_daily_long_term WHERE ds<>"$one_day_ago"  and tag_action_uv_count > 2
             union all
-           select * from dw_cp_tag_statistics_daily where ds="$one_day_ago" and tag_action_uv_count > 2) a
+           select * from recommend.dw_cp_tag_statistics_daily where ds="$one_day_ago" and tag_action_uv_count > 2) a
 ) b  where order_rank=1 ;
 
 
@@ -113,13 +113,13 @@ Select b.tag_id,b.tag_name,b.tag_type_id,b.tag_weight_estimate,b.tag_weight_mach
       select a.*,rank() over (partition by tag_id order by to_date(ds) asc) as order_rank
       from (select * from dw_cp_dic_tag_info_long_term WHERE ds<>"$one_day_ago"
             union all
-           select * from dw_cp_dic_tag_info where ds="$one_day_ago" and tag_type_id="400") a
+           select * from recommend.dw_cp_dic_tag_info where ds="$one_day_ago" and tag_type_id="400") a
 ) b  where order_rank=1 ;
 
 
 
 select "统计标签文章数 好价次数<5:197339  <6:203867  好文次数<1:4841";
-create table dw_cp_content_tag_info as select tag_id,content_type_id, count(distinct(content_id)) as summary from dw_cp_content_tag_relation where ds>"$three_month_ago" and tag_id like "tag%" group by tag_id,content_type_id;
+create table dw_cp_content_tag_info as select tag_id,content_type_id, count(distinct(content_id)) as summary from recommend.dw_cp_content_tag_relation where ds>"$three_month_ago" and tag_id like "tag%" group by tag_id,content_type_id;
 
 
 select "-77778";
