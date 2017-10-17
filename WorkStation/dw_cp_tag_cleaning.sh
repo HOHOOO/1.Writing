@@ -16,6 +16,13 @@ sqoop import --connect 'jdbc:mysql://10.19.57.228/BasedataDB?zeroDateTimeBehavio
 
 
 hive -e '
+set mapred.job.queue.name=q_gmv;
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nostrict;
+set hive.groupby.skewindata=true;
+set hive.exec.parallel=true;
+set mapred.reduce.tasks=10;
+
 drop table tabu_tag_list_mall;
 drop table tabu_tag_list_brand;
 drop table tabu_tag_list_cate;
