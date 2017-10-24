@@ -1,36 +1,12 @@
-drop table recommend.tag_relation_user_preference_long_term;
-drop table recommend.tag_relation_user_preference_level_3;
-drop table recommend.tag_relation_user_preference_level_3_simple;
-drop table recommend.tag_relation_count_left;
-drop table recommend.tag_relation_count_right;
+#!/bin/bash
+home_path=$(cd "`dirname $0`"; pwd)
+quality_sync_time=`date -d "4 day ago" +"%Y-%m-%d"`
 
 
 
+hive -e 'CREATE EXTERNAL TABLE IF NOT EXISTS `sync_yuanchuang` (`id` INT,`uid` INT,`anonymous` INT,`type` INT,`title` string,`image` string,`comment_count` INT,`collection_count` INT,`love_rating_count` INT,`brand` string,`link` string,`mall` string,`is_delete` INT,`status` INT,`publishtime` string,`sum_collect_comment` INT,`series_title_temp` string,`title_series_title` string,`article_type` INT,`recommend` INT,`recommend_display_time` string,`export_from` string,`transfer` INT,`reward_count` INT,`hash_value` string,`flagfield` string,`sync_date` string) LOCATION "/recommend/dw/sync_yuanchuang";
+CREATE EXTERNAL TABLE IF NOT EXISTS `sync_youhui` (`id` INT,`editor_id` MEDIUMINT,`pubdate` string,`choiceness_date` string,`yh_status` INT,`channel` INT,`comment_count` INT,`collection_count` INT,`praise` INT,`sum_collect_comment` INT,`mall` string,`brand` string,`digital_price` string,`worthy` INT,`unworthy` INT,`is_top` INT,`yh_type` string,`is_essence_for_editor` INT,`article_type` INT,`mobile_exclusive` INT,`clean_link` string,`district` INT,`is_review` INT,`faxian_show` INT,`source_from` INT,`strategy_pub` INT,`uhomedate` string,`update_timestamp` string,`reward_count` INT,`mall_id` string,`brand_id` string,`b2c_id` string,`spu_link` string,`hash_value` string,`flagfield` string,`sync_date` string) LOCATION "/recommend/dw/sync_youhui";
+CREATE EXTERNAL TABLE IF NOT EXISTS `sync_youhui_extend` (`id` INT,`createdate` string,`upstring` string,`title_prefix` string,`title` string,`subtitle` string,`phrase_desc` string,`content` mediumstring,`focus_pic_url` string,`referrals` string,`direct_link` string,`direct_link_name` string,`direct_link_list` string,`sales_area` MEDIUMINT,`title_mode` INT,`app_push` INT,`last_editor_id` MEDIUMINT,`sync_home_id` string,`source_from_id` string,`source_from_channel` INT,`sina_id` string,`associate_brand` INT,`associate_mall` INT,`is_anonymous` INT,`stock_status` INT,`comment_switch` INT,`push_type` INT,`guonei_id_for_fx` string,`haitao_id_for_fx` string,`sync_home` INT,`sync_home_time` string,`is_home_top` INT,`edit_page_type` INT,`hash_value` string,`flagfield` string,`sync_date` string,`starttime` string,`endtime` string) LOCATION "/recommend/dw/sync_youhui_extend";
+CREATE EXTERNAL TABLE IF NOT EXISTS `sync_yuanchuang_extend` (`id` INT,`edit_uid` INT,`updateline` string,`dateline` string,`submit_time` string,`last_submit_time` string,`audit_times` INT,`sina_id` string,`tencent_id` string,`remark` string,`plid` string,`district` INT,`have_read` INT,`add_modify` string,`add_modify_time` string,`seo_title` string,`seo_keywords` string,`seo_description` string,`series_id` INT,`series_order_id` INT,`push_type` INT,`baidu_doc_id` string,`probreport_id` string,`is_write_post_time` string,`set_auto_sync` INT,`is_home_top` INT,`from_vote` string,`comment_switch` INT,`associate_brand` INT,`associate_mall` INT,`hash_value` string,`flagfield` string,`sync_date` string) LOCATION "/recommend/dw/sync_yuanchuang_extend";'
 
-
-
-
-select "关联三级标签";
-create table recommend.tag_relation_user_preference_long_term as select user_proxy_key, split(tag_id,"_")[0] as channel, split(tag_id,"_")[1] as tag_id , user_tag_weight FROM recommend.dw_cp_user_preference_long_term where ds>'2017-09-23';
-
-
-select "若不做限制，三级品类105569616，用户数320w";
-select "限制时间后，71235142/2458673";
-create table recommend.tag_relation_user_preference_level_3 as select user_proxy_key,tag_id,user_tag_weight from recommend.tag_relation_user_preference_long_term  a left join default.level_3_1 b on a.tag_id=b.level_3_id and a.channel='cate' where b.level_3_id is not null;
-select "限制用户最大浏览20 和最小数值0.005 后，12447811/2451193（少的用户是因为权重都小于0.005？）";
-CREATE TABLE recommend.tag_relation_user_preference_level_3_simple AS select tag_id,user_proxy_key from (SELECT tag_id,user_proxy_key,user_tag_weight,count() over (partition by user_proxy_key) tag_sum, row_number () over (partition by user_proxy_key ORDER BY user_tag_weight DESC) rank FROM recommend.tag_relation_user_preference_level_3) t where tag_sum>5 and rank<20 and user_tag_weight>0.005;
-
-select "计算标签出现次数";
-CREATE TABLE recommend.tag_relation_count_left AS SELECT tag_id,count(DISTINCT user_proxy_key) user_num,row_number () over (ORDER BY count(DISTINCT user_proxy_key) DESC) rank FROM recommend.tag_relation_user_preference_level_3_simple GROUP BY tag_id;
-create table recommend.tag_relation_count_right as select * from recommend.tag_relation_count_left;
-
-select "计算共现矩阵";
-CREATE TABLE recommend.tag_relation_user_preference_level_3_simple_mirror as select tag_id,user_proxy_key from recommend.tag_relation_user_preference_level_3_simple;
-CREATE TABLE recommend.tag_relation_count_cross AS SELECT t.tag_id_1,t.tag_id_2,t.num FROM (SELECT t1.tag_id AS tag_id_1,t2.tag_id AS tag_id_2,count(DISTINCT t2.user_proxy_key) AS num FROM recommend.tag_relation_user_preference_level_3_simple t1 CROSS JOIN recommend.tag_relation_user_preference_level_3_simple_mirror t2 ON t1.user_proxy_key=t2.user_proxy_key WHERE t1.tag_id<> t2.tag_id GROUP BY t1.tag_id,t2.tag_id) t;
-
-select "标签之间相似度";
-CREATE TABLE recommend.tag_relation_collaborative AS SELECT t1.tag_id_1 AS tag_id_1,t2.user_num_1 AS user_num_1,t1.tag_id_2 AS tag_id_2,t3.user_num_2 AS user_num_2,t1.num AS num,(t1.num/sqrt(t2.user_num_1*t3.user_num_2)) AS power,row_number () over (ORDER BY (t1.num/sqrt(t2.user_num_1*t3.user_num_2)) DESC) rank FROM recommend.tag_relation_count_cross t1 LEFT JOIN (SELECT tag_id,user_num AS user_num_1 FROM recommend.tag_relation_count_left) t2 ON t1.tag_id_1=t2.tag_id LEFT JOIN (SELECT tag_id,user_num AS user_num_2 FROM recommend.tag_relation_count_right) t3 ON t1.tag_id_2=t3.tag_id GROUP BY t1.tag_id_1,t2.user_num_1,t1.tag_id_2,t3.user_num_2,t1.num,(t1.num/sqrt(t2.user_num_1*t3.user_num_2));
-
-CREATE TABLE recommend.tag_relation_collaborative_top20 AS SELECT concat_ws('_',"cate",tag_id_1) as tag_id_1,concat_ws('_',"cate",tag_id_2) as tag_id_2,power,rank FROM (SELECT tag_id_1,tag_id_2,power,row_number () over (PARTITION BY tag_id_1 ORDER BY power DESC) rank FROM recommend.tag_relation_collaborative) t1 WHERE t1.rank<20;
-
-create table recommend.tag_relation_collaborative_top20_name as select d.*,c.tag_name from recommend.dw_cp_dic_tag_info c right join  (select a.*,b.tag_name as tag_relation from recommend.tag_relation_collaborative_top20 a left join recommend.dw_cp_dic_tag_info b on a.tag_id_1=b.tag_id and b.ds='2017-10-23') d on c.tag_id=d.tag_id_2 and c.ds='2017-10-23';
+'jdbc:mysql://smzdm_recommend_mysql_m01_184/recommendDB?zeroDateTimeBehavior=convertToNull?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false' --username recommendUser --password pVhXTntx9ZG --query "select * from sync_youhui where pubdate>ctime(sync_time) \$CONDITIONS " --split-by id -m 4 --fields-terminated-by '\001' --null-string '' --null-non-string '' --hive-drop-import-delims --as-textfile --delete-target-dir --target-dir /recommend/dw/sync_youhui --hive-table recommend.sync_youhui> $home_path/file/log/sync_youhui.log 2>&1
