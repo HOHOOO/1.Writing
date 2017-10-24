@@ -1,14 +1,20 @@
 #!/bin/bash
 home_path=$(cd "`dirname $0`"; pwd)
-quality_sync_time=`date -d "4 day ago" +"%Y-%m-%d"`
+quality_sync_time=`date -d "4 day ago" +"%Y-%m-%d %H-%M-%S"`
+
+hdfs dfs -rm -r -f -skipTrash /recommend/dw/sync_yuanchuang/*
+hdfs dfs -rm -r -f -skipTrash /recommend/dw/sync_yuanchuang_extend/*
+hdfs dfs -rm -r -f -skipTrash /recommend/dw/sync_youhui/*
+hdfs dfs -rm -r -f -skipTrash /recommend/dw/sync_youhui_extend/*
+
+sqoop import --connect 'jdbc:mysql://smzdm_recommend_mysql_m01_184/recommendDB?zeroDateTimeBehavior=convertToNull?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false' --username recommendUser --password pVhXTntx9ZG --query "select * from sync_yuanchuang where publishtime > "$quality_sync_time" and \$CONDITIONS " --split-by id -m 4 --fields-terminated-by '\001' --null-string '' --null-non-string '' --hive-drop-import-delims --as-textfile --delete-target-dir --target-dir /recommend/dw/sync_yuanchuang --hive-table recommend.sync_yuanchuang> ./file/log/sync_yuanchuang.log 2>&1
+sqoop import --connect 'jdbc:mysql://smzdm_recommend_mysql_m01_184/recommendDB?zeroDateTimeBehavior=convertToNull?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false' --username recommendUser --password pVhXTntx9ZG --query "select * from sync_yuanchuang_extend where publishtime > "$quality_sync_time" and \$CONDITIONS " --split-by id -m 4 --fields-terminated-by '\001' --null-string '' --null-non-string '' --hive-drop-import-delims --as-textfile --delete-target-dir --target-dir /recommend/dw/sync_yuanchuang_extend --hive-table recommend.sync_yuanchuang_extend> ./file/log/sync_yuanchuang_extend.log 2>&1
+
+sqoop import --connect 'jdbc:mysql://smzdm_recommend_mysql_m01_184/recommendDB?zeroDateTimeBehavior=convertToNull?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false' --username recommendUser --password pVhXTntx9ZG --query "select * from sync_youhui where publishtime > "$quality_sync_time" and \$CONDITIONS " --split-by id -m 4 --fields-terminated-by '\001' --null-string '' --null-non-string '' --hive-drop-import-delims --as-textfile --delete-target-dir --target-dir /recommend/dw/sync_youhui --hive-table recommend.sync_youhui> ./file/log/sync_youhui.log 2>&1
+sqoop import --connect 'jdbc:mysql://smzdm_recommend_mysql_m01_184/recommendDB?zeroDateTimeBehavior=convertToNull?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false' --username recommendUser --password pVhXTntx9ZG --query "select * from sync_youhui_extend where publishtime > "$quality_sync_time" and \$CONDITIONS " --split-by id -m 4 --fields-terminated-by '\001' --null-string '' --null-non-string '' --hive-drop-import-delims --as-textfile --delete-target-dir --target-dir /recommend/dw/sync_youhui_extend --hive-table recommend.sync_youhui_extend> ./file/log/sync_youhui_extend.log 2>&1
 
 
 
-
-
-'jdbc:mysql://smzdm_recommend_mysql_m01_184/recommendDB?zeroDateTimeBehavior=convertToNull?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false' --username recommendUser --password pVhXTntx9ZG --query "select * from sync_yuanchuang where \$CONDITIONS " --split-by id -m 4 --fields-terminated-by '\001' --null-string '' --null-non-string '' --hive-drop-import-delims --as-textfile --delete-target-dir --target-dir /recommend/dw/sync_yuanchuang --hive-table recommend.sync_yuanchuang> $home_path/file/log/sync_yuanchuang.log 2>&1
-
-'jdbc:mysql://10.19.57.228/BasedataDB?zeroDateTimeBehavior=convertToNull?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false' --username smzdm_basedata --password CFezTQJ4KI --query "select * from sync_yuanchuang_extend where \$CONDITIONS " --split-by id -m 4 --fields-terminated-by '\001' --null-string '' --null-non-string '' --hive-drop-import-delims --as-textfile --delete-target-dir --target-dir /dataOffline/sync_yuanchuang_extend --hive-table sync_yuanchuang_extend  > $home_path/file/log/sync_yuanchuang_extend.log 2>&1
 
 
 hive -e '
