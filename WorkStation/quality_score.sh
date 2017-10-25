@@ -4,12 +4,12 @@ quality_sync_time=`date -d "4 day ago" +"%Y-%m-%d %H:%M:%S"`
 score_timestamp=`date -d "now" +%s`
 
 #input para
-zscore=1.96
-yuanchuang_para1=1
-yuanchuang_para2=1
-yuanchuang_para3=1
-yuanchuang_para4=1
-store_decrease=0.8
+zscore=$1
+yuanchuang_para1=$2
+yuanchuang_para2=$3
+yuanchuang_para3=$4
+yuanchuang_para4=$5
+store_decrease=$6
 
 
 
@@ -41,10 +41,10 @@ set hive.exec.dynamic.partition.mode=nostrict;
 set hive.groupby.skewindata=true;
 set hive.exec.parallel=true;
 set mapred.reduce.tasks=10;
+
 DROP TABLE recommend.quality_data_source_newton;
 DROP TABLE recommend.quality_data_source_wilson;
 DROP TABLE recommend.quality_data_source;
-DROP TABLE recommend.quality_data_score;
 
 CREATE TABLE recommend.quality_data_source_newton AS SELECT id, ("$yuanchuang_para1"*collection_count/max_collection_count)+("$yuanchuang_para2"*love_rating_count/max_love_rating_count)+("$yuanchuang_para3"*comment_count/max_comment_count)+("$yuanchuang_para4"*reward_count/max_reward_count) AS score,0 as last_status, 0 as increase_rate, 0 as order_rank, score_timestamp FROM (SELECT id,collection_count,love_rating_count,comment_count,reward_count,score_timestamp,max(collection_count) over (PARTITION BY score_timestamp ) AS max_collection_count,max(love_rating_count) over (PARTITION BY score_timestamp ) AS max_love_rating_count,max(comment_count) over (PARTITION BY score_timestamp ) AS max_comment_count,max(reward_count) over (PARTITION BY score_timestamp ) AS max_reward_count from  ( SELECT id,collection_count,love_rating_count,comment_count,reward_count,"$score_timestamp" as score_timestamp FROM sync_yuanchuang ) t2 ) t3;
 
