@@ -7,8 +7,13 @@ hello[^hello]
   3. 好文关联规则质量度
 
 
-  | 公众号    | Topic                | Remarks                                                                                      |
-  | ------ | -------------------- | -------------------------------------------------------------------------------------------- |
-||||
+| content    | tags   | wilson_score/newtown_score | wilson_rate/newtow_rate|
+| - | - | -|-|
+|||||
+
+| user    | tags   | collaborative_tags |collaborative_tags2 |
+| - | - | -|-|
+|||||
+
 
 [^hello]: 快速打开
