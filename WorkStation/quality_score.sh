@@ -35,6 +35,12 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `sync_youhui` (`id` INT,`editor_id` INT,`pub
 CREATE EXTERNAL TABLE IF NOT EXISTS `sync_youhui_extend` (`id` INT,`createdate` string,`upstring` string,`title_prefix` string,`title` string,`subtitle` string,`phrase_desc` string,`content` string,`focus_pic_url` string,`referrals` string,`direct_link` string,`direct_link_name` string,`direct_link_list` string,`sales_area` INT,`title_mode` INT,`app_push` INT,`last_editor_id` INT,`sync_home_id` string,`source_from_id` string,`source_from_channel` INT,`sina_id` string,`associate_brand` INT,`associate_mall` INT,`is_anonymous` INT,`stock_status` INT,`comment_switch` INT,`push_type` INT,`guonei_id_for_fx` string,`haitao_id_for_fx` string,`sync_home` INT,`sync_home_time` string,`is_home_top` INT,`edit_page_type` INT,`hash_value` string,`flagfield` string,`sync_date` string,`starttime` string,`endtime` string) LOCATION "/recommend/dw/sync_youhui_extend";
 CREATE EXTERNAL TABLE IF NOT EXISTS `sync_yuanchuang_extend` (`id` INT,`edit_uid` INT,`updateline` string,`dateline` string,`submit_time` string,`last_submit_time` string,`audit_times` INT,`sina_id` string,`tencent_id` string,`remark` string,`plid` string,`district` INT,`have_read` INT,`add_modify` string,`add_modify_time` string,`seo_title` string,`seo_keywords` string,`seo_description` string,`series_id` INT,`series_order_id` INT,`push_type` INT,`baidu_doc_id` string,`probreport_id` string,`is_write_post_time` string,`set_auto_sync` INT,`is_home_top` INT,`from_vote` string,`comment_switch` INT,`associate_brand` INT,`associate_mall` INT,`hash_value` string,`flagfield` string,`sync_date` string) LOCATION "/recommend/dw/sync_yuanchuang_extend";
 
+set mapred.job.queue.name=q_gmv;
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nostrict;
+set hive.groupby.skewindata=true;
+set hive.exec.parallel=true;
+set mapred.reduce.tasks=10;
 DROP TABLE recommend.quality_data_source_newton;
 DROP TABLE recommend.quality_data_source_wilson;
 DROP TABLE recommend.quality_data_source;
