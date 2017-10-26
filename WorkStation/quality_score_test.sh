@@ -5,7 +5,7 @@ score_timestamp=`date -d "now" +%s`
 
 #input para
 zscore=$1
-yuanchuang_para1=$2
+yuanchuang_para=$2
 yuanchuang_para2=$3
 yuanchuang_para3=$4
 yuanchuang_para4=$5
@@ -22,5 +22,5 @@ hive -e '
 use recommend;
 
 SELECT "$zscore,$yuanchuang_para1,$yuanchuang_para2,$yuanchuang_para3,$yuanchuang_para4,$store_decrease";
- SELECT id, (pow($yuanchuang_para1,1) * collection_count from  ( SELECT id,collection_count,love_rating_count,comment_count,reward_count,$score_timestamp  as score_timestamp FROM sync_yuanchuang ) limit 5;
+ SELECT id, (pow( $yuanchuang_para ,1) * collection_count from  ( SELECT id,collection_count,love_rating_count,comment_count,reward_count,$score_timestamp  as score_timestamp FROM sync_yuanchuang ) limit 5;
 '
