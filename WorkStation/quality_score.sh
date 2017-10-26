@@ -38,17 +38,22 @@ set mapred.reduce.tasks=10;
 DROP TABLE recommend.quality_data_source_newton;
 DROP TABLE recommend.quality_data_source_wilson;
 DROP TABLE recommend.quality_data_source;
-DROP TABLE recommend.quality_data_score_temp;
 
 
 CREATE TABLE recommend.quality_data_source_newton AS SELECT id, (${para1} *collection_count/max_collection_count)+(${para2} *love_rating_count/max_love_rating_count)+(${para3} *comment_count/max_comment_count)+(${para4} *reward_count/max_reward_count) AS score,0 as last_status, 0 as increase_rate, 0 as order_rank, score_timestamp FROM (SELECT id,collection_count,love_rating_count,comment_count,reward_count,score_timestamp,max(collection_count) over (PARTITION BY score_timestamp ) AS max_collection_count,max(love_rating_count) over (PARTITION BY score_timestamp ) AS max_love_rating_count,max(comment_count) over (PARTITION BY score_timestamp ) AS max_comment_count,max(reward_count) over (PARTITION BY score_timestamp ) AS max_reward_count from  ( SELECT id,collection_count,love_rating_count,comment_count,reward_count,${timestamp}  as score_timestamp FROM sync_yuanchuang ) t2 ) t3;
 
 CREATE TABLE recommend.quality_data_source_wilson AS SELECT id, CASE WHEN phat=-${zscore}  THEN 0 WHEN phat<>-${zscore}  AND source_from=5 THEN (${store} )*(phat + ${zscore} /n - ${zscore} *sqrt((phat * (1- phat) /n)+${zscore} /(4*pow(n,2))))/(1+${zscore} /n) ELSE (phat + ${zscore} /n - ${zscore} *sqrt((phat * (1- phat) /n)+${zscore} /(4*pow(n,2))))/(1+${zscore} /n)  END as score,0 as last_status, 0 as increase_rate, 0 as order_rank, score_timestamp from ( SELECT id,(worthy+unworthy) as n,CASE WHEN (worthy+unworthy)=0 THEN -1.96 ELSE (worthy/(worthy+unworthy)) END as phat,worthy,unworthy,source_from,${timestamp}  as score_timestamp FROM sync_youhui ) t ;
 
-CREATE TABLE recommend.quality_data_source AS SELECT a.* from (select * ,1 as class from recommend.quality_data_source_newton union all  select * ,0 as class from recommend.quality_data_source_wilson) a;
+CREATE TABLE `recommend.quality_data_source`(
+  `id` int,
+  `score` double,
+  `last_status` double,
+  `increase_rate` double,
+  `order_rank` int,
+  `score_timestamp` int,
+  `class` int);
 
-create table recommend.quality_data_score_temp as SELECT id,score,last_status,((increase_rate-min_increase_rate)/(max_increase_rate-min_increase_rate+0.00001)) AS increase_rate,order_rank,score_timestamp,class FROM ( SELECT id,score,last_status,increase_rate,max(increase_rate) over (PARTITION BY class) AS max_increase_rate,min(increase_rate) over (PARTITION BY class) AS min_increase_rate,order_rank,score_timestamp,class FROM ( SELECT id,score_alias AS score,last_status,CASE WHEN last_status=0 THEN 0 ELSE ((score_alias-last_status)/last_status+0.00001) END AS increase_rate,order_rank,score_timestamp,class FROM (SELECT id,score AS score_alias,score_timestamp,lead (score,1,0) over (PARTITION BY id ORDER BY score_timestamp DESC) AS last_status,rank () over (PARTITION BY id ORDER BY score_timestamp DESC) AS order_rank,class FROM (SELECT id,score,score_timestamp,class,order_rank FROM recommend.quality_data_score WHERE order_rank=1 UNION ALL SELECT id,score,score_timestamp,class,order_rank FROM recommend.quality_data_source) a ) b) c) t;
+INSERT OVERWRITE TABLE  recommend.quality_data_source SELECT a.* from (select * ,1 as class from recommend.quality_data_source_newton union all  select * ,0 as class from recommend.quality_data_source_wilson) a;
 
-DROP TABLE recommend.quality_data_score;
-CREATE TABLE recommend.quality_data_score select * from quality_data_score_temp where order_rank=1;
+INSERT OVERWRITE TABLE recommend.quality_data_score SELECT id,score,last_status,((increase_rate-min_increase_rate)/(max_increase_rate-min_increase_rate+0.00001)) AS increase_rate,order_rank,score_timestamp,class FROM ( SELECT id,score,last_status,increase_rate,max(increase_rate) over (PARTITION BY class) AS max_increase_rate,min(increase_rate) over (PARTITION BY class) AS min_increase_rate,order_rank,score_timestamp,class FROM ( SELECT id,score_alias AS score,last_status,CASE WHEN last_status=0 THEN 0 ELSE ((score_alias-last_status)/last_status+0.00001) END AS increase_rate,order_rank,score_timestamp,class FROM (SELECT id,score AS score_alias,score_timestamp,lead (score,1,0) over (PARTITION BY id ORDER BY score_timestamp DESC) AS last_status,rank () over (PARTITION BY id ORDER BY score_timestamp DESC) AS order_rank,class FROM (SELECT id,score,score_timestamp,class,order_rank FROM recommend.quality_data_score WHERE order_rank=1 UNION ALL SELECT id,score,score_timestamp,class,order_rank FROM recommend.quality_data_source) a ) b) c) t where order_rank=1;
 '
