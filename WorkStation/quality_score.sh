@@ -47,5 +47,11 @@ CREATE TABLE recommend.quality_data_source_wilson AS SELECT id, CASE WHEN phat=-
 CREATE TABLE recommend.quality_data_source AS SELECT a.* from (select * ,1 as class from recommend.quality_data_source_newton union all  select * ,0 as class from recommend.quality_data_source_wilson) a;
 
 
-INSERT OVERWRITE TABLE recommend.quality_data_score SELECT id,score,last_status,(increase_rate-min_increase_rate)/(max_increase_rate-min_increase_rate+0.00001) as increase_rate, order_rank,score_timestamp,class from (select id,score,last_status ,increase_rate, max(increase_rate) over (PARTITION BY class ) as max_increase_rate,min(increase_rate) over (PARTITION BY class ) as min_increase_rate,order_rank,score_timestamp,class from (SELECT id,score,last_status,CASE WHEN last_status=0 THEN 0 ELSE (score-last_status)/last_status END AS increase_rate,order_rank,score_timestamp,class FROM (SELECT id,score_alias as score,score_timestamp,lag(score_alias,1,0) over (PARTITION BY id ORDER BY score_timestamp ASC) AS last_status,rank () over (PARTITION BY id ORDER BY score_timestamp DESC) AS order_rank,class FROM (SELECT id,score as score_alias,score_timestamp,class FROM recommend.quality_data_score WHERE order_rank=1 UNION ALL SELECT id,score,score_timestamp,class FROM recommend.quality_data_source) a) b) c) t where order_rank=1;
+INSERT OVERWRITE TABLE recommend.quality_data_score
+SELECT id,score,last_status,((increase_rate-min_increase_rate)/(max_increase_rate-min_increase_rate+0.00001)) AS increase_rate,order_rank,score_timestamp,class FROM (
+SELECT id,score,last_status,increase_rate,max(increase_rate) over (PARTITION BY class) AS max_increase_rate,min(increase_rate) over (PARTITION BY class) AS min_increase_rate,order_rank,score_timestamp,class FROM (
+SELECT id,score_alias AS score,last_status,CASE WHEN last_status=0 THEN 0 ELSE (score_alias-last_status)/last_status END AS increase_rate,order_rank,score_timestamp,class FROM (
+SELECT id,score AS score_alias,score_timestamp,lead (score,1,0) over (PARTITION BY id ORDER BY score_timestamp DESC) AS last_status,rank () over (PARTITION BY id ORDER BY score_timestamp DESC) AS order_rank,class FROM (
+SELECT id,score,score_timestamp,class,order_rank FROM recommend.quality_data_score WHERE order_rank=1 UNION ALL
+SELECT id,score,score_timestamp,class,order_rank FROM recommend.quality_data_source) a) b) c) t;
 '
