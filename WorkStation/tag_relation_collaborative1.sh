@@ -1,10 +1,24 @@
 
 hive -e "
 
+set mapred.job.queue.name=q_gmv;
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nostrict;
+set hive.groupby.skewindata=true;
+set hive.exec.parallel=true;
+set mapred.reduce.tasks=10;
+
 drop table recommend.tag_relation_cate_user_preference_level_3;
 drop table recommend.tag_relation_cate_user_preference_level_3_simple;
 drop table recommend.tag_relation_cate_count_left;
 drop table recommend.tag_relation_cate_count_right;
+drop table recommend.tag_relation_cate_count_cross;
+drop table recommend.tag_relation_cate_user_preference_level_3_simple_mirror;
+drop table recommend.tag_relation_cate_collaborative;
+drop table recommend.tag_relation_cate_collaborative_top20;
+drop table recommend.tag_relation_cate_collaborative_top20_name;
+
+
 
 select '三级品类协同过滤数据源收集';
 select '关联三级标签,若不做限制，三级品类105569616，用户数320w';
@@ -36,13 +50,16 @@ create table recommend.tag_relation_cate_collaborative_top20_name as select d.*,
 
 
 
-drop table recommend.tag_relation_brand_user_preference_long_term;
+
 drop table recommend.tag_relation_brand_user_preference;
 drop table recommend.tag_relation_brand_user_preference_simple;
 drop table recommend.tag_relation_brand_count_left;
 drop table recommend.tag_relation_brand_count_right;
 drop table recommend.tag_relation_brand_count_cross;
-
+drop table recommend.tag_relation_brand_user_preference_simple_mirror;
+drop table recommend.tag_relation_brand_collaborative;
+drop table recommend.tag_relation_brand_collaborative_top20;
+drop table recommend.tag_relation_brand_collaborative_top20_name;
 
 select '品牌协同过滤数据源收集';
 select '若不做限制，三级品类105569616，用户数320w';
@@ -71,6 +88,11 @@ CREATE TABLE recommend.tag_relation_brand_collaborative_top20 AS SELECT tag_id_1
 create table recommend.tag_relation_brand_collaborative_top20_name as select d.*,c.tag_name from recommend.dw_cp_dic_tag_info c right join  (select a.*,b.tag_name as tag_relation_brand from recommend.tag_relation_brand_collaborative_top20 a left join recommend.dw_cp_dic_tag_info b on a.tag_id_1=b.tag_id and b.ds='2017-10-23') d on c.tag_id=d.tag_id_2 and c.ds='2017-10-23';
 
 
+
+drop table recommend.tag_relation_catebrand_count_cross;
+drop table recommend.tag_relation_catebrand_collaborative;
+drop table recommend.tag_relation_catebrand_collaborative_top20;
+drop table recommend.tag_relation_catebrand_collaborative_top20_name;
 
 
 
