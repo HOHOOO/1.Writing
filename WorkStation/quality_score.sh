@@ -46,8 +46,8 @@ CREATE TABLE recommend.quality_data_source_wilson AS SELECT id, CASE WHEN phat=-
 CREATE TABLE recommend.quality_data_source AS SELECT a.* from (select * from recommend.quality_data_source_newton union all  select * from recommend.quality_data_source_wilson) a;
 
 INSERT OVERWRITE TABLE recommend.quality_data_score
-Select b.*,(score - last_status)/last_status as increase_rate  from (
-      select a.*,LEAD(score, 1, 0) over (partition by id order by score_timestamp desc) as last_status ,rank() over (partition by id order by score_timestamp desc) as order_rank
+Select b.*,CASE WHEN last_status=0 THEN 0 ELSE (score - last_status)/last_status END AS increase_rate  from (
+      select a.*,LEAD(score, -1, 0) over (partition by id order by score_timestamp desc) as last_status ,rank() over (partition by id order by score_timestamp desc) as order_rank
       from (select id, score,score_timestamp from recommend.quality_data_score WHERE order_rank=1
             union all
            select id, score,score_timestamp  from recommend.quality_data_source ) a
