@@ -1,7 +1,7 @@
 #!/bin/bash
 home_path=$(cd "`dirname $0`"; pwd)
 quality_sync_time=`date -d "4 day ago" +"%Y-%m-%d %H:%M:%S"`
-score_timestamp=`date -d "now" +%s`
+
 
 
 
@@ -21,7 +21,7 @@ sqoop import --connect 'jdbc:mysql://smzdm_recommend_mysql_m01_184/recommendDB?z
 
 
 
-hive -d zscore='1.96' -d  para1='1' -d para2='1' -d para3='1' -d para4='1' -d store='0.8' -d timestamp='${score_timestamp}' -e '
+hive -d zscore='1.96' -d  para1='1' -d para2='1' -d para3='1' -d para4='1' -d store='0.8' -d timestamp=`date -d "now" +%s` -e '
 use recommend;
 CREATE EXTERNAL TABLE IF NOT EXISTS `sync_yuanchuang` (`id` INT,`uid` INT,`anonymous` INT,`type` INT,`title` string,`image` string,`comment_count` INT,`collection_count` INT,`love_rating_count` INT,`brand` string,`link` string,`mall` string,`is_delete` INT,`status` INT,`publishtime` string,`sum_collect_comment` INT,`series_title_temp` string,`title_series_title` string,`article_type` INT,`recommend` INT,`recommend_display_time` string,`export_from` string,`transfer` INT,`reward_count` INT,`hash_value` string,`flagfield` string,`sync_date` string) LOCATION "/recommend/dw/sync_yuanchuang";
 CREATE EXTERNAL TABLE IF NOT EXISTS `sync_youhui` (`id` INT,`editor_id` INT,`pubdate` string,`choiceness_date` string,`yh_status` INT,`channel` INT,`comment_count` INT,`collection_count` INT,`praise` INT,`sum_collect_comment` INT,`mall` string,`brand` string,`digital_price` string,`worthy` INT,`unworthy` INT,`is_top` INT,`yh_type` string,`is_essence_for_editor` INT,`article_type` INT,`mobile_exclusive` INT,`clean_link` string,`district` INT,`is_review` INT,`faxian_show` INT,`source_from` INT,`strategy_pub` INT,`uhomedate` string,`update_timestamp` string,`reward_count` INT,`mall_id` string,`brand_id` string,`b2c_id` string,`spu_link` string,`hash_value` string,`flagfield` string,`sync_date` string) LOCATION "/recommend/dw/sync_youhui";
