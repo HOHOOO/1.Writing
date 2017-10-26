@@ -51,5 +51,5 @@ Select b.id,b.score,b.last_status,CASE WHEN last_status=0 THEN 0 ELSE (score - l
       from (select id, score,score_timestamp from recommend.quality_data_score WHERE order_rank=1
             union all
            select id, score,score_timestamp  from recommend.quality_data_source ) a
-) b  where order_rank<2 ;
+) b;
 '
