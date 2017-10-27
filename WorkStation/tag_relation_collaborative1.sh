@@ -29,7 +29,7 @@ CREATE TABLE recommend.tag_relation_cate_user_preference_level_3_simple AS selec
 
 select '计算标签出现次数';
 
-CREATE TABLE recommend.tag_relation_cate_count_left AS SELECT tag_id,count(DISTINCT user_proxy_key) user_num,row_number () over (ORDER BY count(DISTINCT user_proxy_key) DESC) rank FROM recommend.tag_relation_cate_user_preference_level_3_simple where user_num > 10 GROUP BY tag_id;
+CREATE TABLE recommend.tag_relation_cate_count_left AS SELECT tag_id,count(DISTINCT user_proxy_key) as user_num,row_number () over (ORDER BY count(DISTINCT user_proxy_key) DESC) rank FROM recommend.tag_relation_cate_user_preference_level_3_simple GROUP BY tag_id;
 create table recommend.tag_relation_cate_count_right as select * from recommend.tag_relation_cate_count_left;
 
 
@@ -71,7 +71,7 @@ select '限制用户最大浏览20 和最小数值0.005 后，439（少的用户
 CREATE TABLE recommend.tag_relation_brand_user_preference_simple AS select tag_id,user_proxy_key from (SELECT tag_id,user_proxy_key,user_tag_weight,count(*) over (partition by user_proxy_key) tag_sum, row_number () over (partition by user_proxy_key ORDER BY user_tag_weight DESC) rank FROM recommend.tag_relation_brand_user_preference) t where tag_sum>5 and rank<20 and user_tag_weight>0.01;
 
 select '计算标签出现次数';
-CREATE TABLE recommend.tag_relation_brand_count_left AS SELECT tag_id,count(DISTINCT user_proxy_key) user_num,row_number () over (ORDER BY count(DISTINCT user_proxy_key) DESC) rank FROM recommend.tag_relation_brand_user_preference_simple where user_num > 10 GROUP BY tag_id;
+CREATE TABLE recommend.tag_relation_brand_count_left AS SELECT tag_id,count(DISTINCT user_proxy_key) as user_num,row_number () over (ORDER BY count(DISTINCT user_proxy_key) DESC) rank FROM recommend.tag_relation_brand_user_preference_simple GROUP BY tag_id;
 create table recommend.tag_relation_brand_count_right as select * from recommend.tag_relation_brand_count_left;
 
 
