@@ -65,7 +65,7 @@ drop table recommend.tag_relation_brand_collaborative_top20_name;
 select '品牌协同过滤数据源收集';
 select '若不做限制，三级品类105569616，用户数320w';
 select '限制时间后，71235142/2458673';
-create table recommend.tag_relation_brand_user_preference as select user_proxy_key, tag_id , user_tag_weight FROM recommend.dw_cp_user_preference_long_term where tag_id='brand%' and ds>'2017-09-23';
+create table recommend.tag_relation_brand_user_preference as select user_proxy_key, tag_id , user_tag_weight FROM recommend.dw_cp_user_preference_long_term where tag_id like 'brand%' and ds>'2017-09-23';
 
 select '限制用户最大浏览20 和最小数值0.005 后，439（少的用户是因为权重都小于0.005？）';
 CREATE TABLE recommend.tag_relation_brand_user_preference_simple AS select tag_id,user_proxy_key from (SELECT tag_id,user_proxy_key,user_tag_weight,count(*) over (partition by user_proxy_key) tag_sum, row_number () over (partition by user_proxy_key ORDER BY user_tag_weight DESC) rank FROM recommend.tag_relation_brand_user_preference) t where tag_sum>5 and rank<20 and user_tag_weight>0.01;
