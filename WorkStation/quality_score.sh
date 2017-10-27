@@ -2,10 +2,6 @@
 home_path=$(cd "`dirname $0`"; pwd)
 quality_sync_time=`date -d "4 day ago" +"%Y-%m-%d %H:%M:%S"`
 
-
-
-
-
 hdfs dfs -rm -r -f -skipTrash /recommend/dw/sync_yuanchuang/*
 hdfs dfs -rm -r -f -skipTrash /recommend/dw/sync_yuanchuang_extend/*
 hdfs dfs -rm -r -f -skipTrash /recommend/dw/sync_youhui/*
@@ -57,3 +53,17 @@ INSERT OVERWRITE TABLE  recommend.quality_data_source SELECT a.* from (select * 
 
 INSERT OVERWRITE TABLE recommend.quality_data_score SELECT id,score,last_status,((increase_rate-min_increase_rate)/(max_increase_rate-min_increase_rate+0.00001)) AS increase_rate,order_rank,score_timestamp,class FROM ( SELECT id,score,last_status,increase_rate,max(increase_rate) over (PARTITION BY class) AS max_increase_rate,min(increase_rate) over (PARTITION BY class) AS min_increase_rate,order_rank,score_timestamp,class FROM ( SELECT id,score_alias AS score,last_status,CASE WHEN last_status=0 THEN 0 ELSE ((score_alias-last_status)/last_status+0.00001) END AS increase_rate,order_rank,score_timestamp,class FROM (SELECT id,score AS score_alias,score_timestamp,lead (score,1,0) over (PARTITION BY id ORDER BY score_timestamp DESC) AS last_status,rank () over (PARTITION BY id ORDER BY score_timestamp DESC) AS order_rank,class FROM (SELECT id,score,score_timestamp,class,order_rank FROM recommend.quality_data_score WHERE order_rank=1 UNION ALL SELECT id,score,score_timestamp,class,order_rank FROM recommend.quality_data_source) a ) b) c) t where order_rank=1;
 '
+
+
+mysql -hsmzdm_recommend_mysql_s01_150  -urecommendUser -ppVhXTntx9ZG recommendDB -e "
+drop table home_article_quality_score;
+create table home_article_quality_score(id int(11) , score double(10,4) , last_status double(10,4),increase_rate double(10,4),order_rank  int(11) ,score_timestamp  int(11) ,class  int(11) );
+"
+sqoop export --connect jdbc:mysql://smzdm_recommend_mysql_s01_150/recommendDB --username recommendUser --password pVhXTntx9ZG --table home_article_quality_score --fields-terminated-by '\001' --export-dir 'hdfs://hadoopcluster/user/hive/warehouse/recommend.db/quality_data_score'
+
+mysql -hsmzdm_recommend_mysql_s01_150  -urecommendUser -ppVhXTntx9ZG recommendDB -e "update home_article_online a, home_article_quality_score b
+set a.hot_score = b.score,
+a.hot_increase_rate = b. increase_rate
+where a.article_id= b.id
+and ((a.channel='yh' and b.class=0)
+or (a.channel='yc' and b.class=1));"
