@@ -14,12 +14,6 @@ CREATE TABLE recommend.tag_relation_cate_user_preference_1 as select b.id,b.tag_
 
 CREATE TABLE recommend.tag_relation_cate_user_preference_2 as select * from (select  id as user_proxy_key,tag_id_2 as tag_id,user_tag_weigh_new as user_tag_weight,row_number () over (PARTITION BY id ORDER BY user_tag_weigh_new DESC) as rank from recommend.tag_relation_cate_user_preference_1) t where t.rank<50;
 
-CREATE TABLE tag_relation_user_preference as Select b.user_proxy_key,b.tag_id,b.user_tag_weight from (
-      select a.*,rank() over (partition by user_proxy_key,tag_id order by user_tag_weight asc,coalesce(user_tag_weight,0),rand()) as order_rank
-      from ( (select user_proxy_key,tag_id, user_tag_weight from (select  id as user_proxy_key,tag_id_2 as tag_id,user_tag_weigh_new as user_tag_weight,row_number () over (PARTITION BY id ORDER BY user_tag_weigh_new DESC) as rank from recommend.tag_relation_cate_user_preference_1) t where t.rank<50) c
-            union all
-           select * from T7 ) a
-) b  where order_rank=1;
 
 CREATE TABLE recommend.tag_relation_user_preference as Select b.user_proxy_key,b.tag_id,b.user_tag_weight from (
       select a.*,row_number() over (partition by user_proxy_key,tag_id order by user_tag_weight asc) as order_rank
