@@ -6,9 +6,9 @@ create table recommend.tag_relation_cate_user_preference as select a.user_proxy_
 
 
 select "二类偏好聚合";
-CREATE TABLE recommend.test_T1 as select user_proxy_key,max(user_tag_weigh_new) over (PARTITION BY user_proxy_key,tag_id_2 ) as user_tag_weigh_new,tag_id_2 from  recommend.tag_relation_cate_user_preference;
+CREATE TABLE recommend.tag_relation_cate_user_preference_3 as select user_proxy_key as id,tag_id_2,user_tag_weigh_new,row_number() over (PARTITION BY user_proxy_key,tag_id_2 order by user_tag_weigh_new desc ) as row_num from  recommend.tag_relation_cate_user_preference;
 select "二类偏好与一类去重列转行";
-CREATE TABLE recommend.tag_relation_cate_user_preference_1 as select b.id,b.tag_id_2,b.user_tag_weigh_new,c.tag_id from ( select user_proxy_key as id,(user_tag_weigh_new) over (PARTITION BY user_proxy_key,tag_id_2 ) as user_tag_weigh_new,tag_id_2 from  recommend.tag_relation_cate_user_preference ) b LEFT OUTER join recommend.tag_relation_cate_user_preference_level_3 c on b.id=c.user_proxy_key and b.tag_id_2=c.tag_id and c.rank<20 where c.tag_id is NULL;
+CREATE TABLE recommend.tag_relation_cate_user_preference_1 as select b.id,b.tag_id_2,b.user_tag_weigh_new,c.tag_id from ( select * from recommend.tag_relation_cate_user_preference_3 where row_num=1 ) b LEFT OUTER join recommend.tag_relation_cate_user_preference_level_3 c on b.id=c.user_proxy_key and b.tag_id_2=c.tag_id and c.rank<20 where c.tag_id is NULL;
 
 
 
