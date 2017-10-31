@@ -1,3 +1,15 @@
+hive -e "
+set mapred.job.queue.name=q_gmv;
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nostrict;
+set hive.groupby.skewindata=true;
+set hive.exec.parallel=true;
+set mapred.reduce.tasks=10;
+drop table recommend.tag_relation_cate_user_preference;
+drop table recommend.tag_relation_cate_user_preference_3;
+drop table recommend.tag_relation_cate_user_preference_1;
+drop table recommend.tag_relation_cate_user_preference_2;
+drop table recommend.tag_relation_user_preference;
 
 select "连接二类偏好";
 create table recommend.tag_relation_cate_user_preference as select a.user_proxy_key,a.tag_id,a.user_tag_weight,b.tag_id_2,b.power,b.rank,a.user_tag_weight*b.power as user_tag_weigh_new from recommend.tag_relation_cate_user_preference_level_3 a left join (SELECT tag_id_1,tag_id_2,power,rank FROM (SELECT tag_id_1,tag_id_2,power,row_number () over (PARTITION BY tag_id_1 ORDER BY power DESC) rank FROM recommend.tag_relation_cate_collaborative) t1) b on a.tag_id=b.tag_id_1 and a.rank<30 and b.rank<15 and b.power>0.05;
@@ -15,3 +27,4 @@ CREATE TABLE recommend.tag_relation_user_preference as Select b.user_proxy_key,b
             union all
            select user_proxy_key,tag_id,user_tag_weight from T7 ) a
 ) b  where order_rank=1;
+"
