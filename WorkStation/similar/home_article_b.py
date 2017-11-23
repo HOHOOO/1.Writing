@@ -692,7 +692,7 @@ class HomeArticleB(object):
 
     @gen.coroutine
     def tools_get_editor_sort_article_list(self):
-        # TODO 1.仅供内部人员工具类接口   2.整合和线上接口统一
+        # DOING 1.仅供内部人员工具类接口   2.整合和线上接口统一 id:0
         pull_down_end_time = (datetime.now() - timedelta(hours=24) - timedelta(minutes=2)).strftime(
             "%Y-%m-%d %H:%M:%S")
         now = (datetime.now() - timedelta(minutes=2)
@@ -702,7 +702,7 @@ class HomeArticleB(object):
             editor_data = yield self._calc_article_weight_or_sort(editor_data, 0, True, -1.0)
 
         raise gen.Return(editor_data)
-
+        # TODO 2.仅供内部人员工具类接口   2.整合和线上接口统一 id:0
     @gen.coroutine
     def _filter_sex_porduct(self, article):
         # 夜间不过滤成人用品
